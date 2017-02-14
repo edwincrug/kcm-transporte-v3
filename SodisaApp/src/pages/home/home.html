@@ -1,0 +1,136 @@
+<ion-header>
+    <ion-toolbar color="secondary">
+        <ion-title>{{nombre}} ({{listaViajesLocales.length}})
+            <br> Eco: {{noTracto}}
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-fab right top edge>
+        <button ion-fab>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-fab-list>
+            <button ion-fab color="light" (click)="ViajesAsignados()">
+                <ion-icon name="bus"></ion-icon>
+            </button>
+            <button ion-fab color="sync" (click)="redirectSync()">
+                <ion-icon name="sync"></ion-icon>
+            </button>
+            <button ion-fab color="secondary" (click)="redirectConfiguracion()">
+                <ion-icon name="cog"></ion-icon>
+            </button>
+        </ion-fab-list>
+    </ion-fab>
+
+    <ion-card *ngIf="listaViajesLocales.length == 0">
+        <ion-card-header>
+            No has aceptado ningún viaje.
+        </ion-card-header>
+        <ion-item>
+            <h2><strong>Importante:</strong></h2>
+        </ion-item>
+        <ion-card-content>
+            <p>Por favor dirígete a la bandeja de viajes asignados.</p>
+        </ion-card-content>
+    </ion-card>
+
+    <ion-card *ngFor="let viaje of listaViajesLocales; let i = index">
+        <ion-item>
+            <ion-icon name="speedometer" item-left></ion-icon>
+            <h2>Concentrado #{{viaje.idConcentrado}}</h2>
+            <!--<p>Aceptado 11/01/17 11:34</p>-->
+            <!--<p>Remolque: {{viaje.economico}}</p>
+            <p>IdMovimiento: {{viaje.idMovimiento}}</p>-->
+        </ion-item>
+        <sebm-google-map *ngIf="pintaMapa == 1 && (viaje.idEstatus == 2 || viaje.idEstatus == 3 || viaje.idEstatus == 5)" id="map" [latitude]="map.lat"
+            [longitude]="map.lng" [zoom]="map.zoom">
+            <sebm-google-map-marker [latitude]="map.lat" [longitude]="map.lng">
+                <sebm-google-map-info-window>
+                    <strong>My location</strong>
+                </sebm-google-map-info-window>
+            </sebm-google-map-marker>
+        </sebm-google-map>
+        <ion-item>
+            <ion-icon name="home" item-left></ion-icon>
+            <h2>Origen</h2>
+            <p>{{viaje.idOrigen}} - {{viaje.origenNombre}}</p>
+        </ion-item>
+        <ion-item>
+            <ion-icon name="trending-up" item-left></ion-icon>
+            <h2>Destino</h2>
+            <p> {{viaje.destino}} </p>
+        </ion-item>
+        <ion-item>
+            <span>{{viaje.horasDistancia}} hr</span>
+            <span>({{viaje.kilometrosDistancia}} km)</span>
+        </ion-item>
+        <ion-item>
+
+            <button *ngIf="viaje.idEstatus == 9" ion-button icon-left round item-right size (click)="ManejoDeManiobra(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, viaje.tipoViaje, 11)"
+                color="sync">
+                <ion-icon name="play"></ion-icon>
+                Inicia Maniobra
+            </button>
+            <button *ngIf="viaje.idEstatus == 11" ion-button icon-left round item-right size (click)="ManejoDeManiobra(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, viaje.tipoViaje, 12)"
+                color="primary">
+                <ion-icon name="move"></ion-icon>
+                Andén
+            </button>
+            <button *ngIf="viaje.idEstatus == 12" ion-button icon-left round item-right size (click)="ManejoDeManiobra(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, viaje.tipoViaje, 13)"
+                color="alert">
+                <ion-icon name="square"></ion-icon>
+                Terminar Maniobra
+            </button>
+
+            <button *ngIf="viaje.idEstatus == 2" ion-button icon-left round item-right size (click)="AceptaViaje(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado)"
+                color="sync">
+                <ion-icon name="checkmark-circle"></ion-icon>
+                Aceptar
+            </button>
+            <button *ngIf="viaje.idEstatus == 2" ion-button icon-left round item-right size (click)="MuestraMotivos(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado)"
+                color="danger">
+                <ion-icon name="close-circle"></ion-icon>
+                Rechazar
+            </button>
+            <button *ngIf="viaje.idEstatus == 3" ion-button icon-left round item-right size (click)="OpenModal(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, viaje.economico, 1)"
+                color="sync">
+                <ion-icon name="checkmark-circle"></ion-icon>
+                Iniciar Viaje
+            </button>
+            <button *ngIf="viaje.idEstatus == 3 || viaje.idEstatus == 5" ion-button icon-left round item-right size (click)="MuestraParadas(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado)"
+                color="primary">
+                <ion-icon name="hand"></ion-icon>
+                Parada
+            </button>
+            <button *ngIf="viaje.idEstatus == 3 || viaje.idEstatus == 5" ion-button icon-left round item-right size (click)="MuestraIncidentes(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado)"
+                color="danger">
+                <ion-icon name="alert"></ion-icon>
+                Incidente
+            </button>
+            <button *ngIf="viaje.idEstatus == 5" ion-button icon-left round item-right size (click)="OpenModal(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, viaje.economico, 2)"
+                color="sync">
+                <ion-icon name="checkmark-circle"></ion-icon>
+                Llegada
+            </button>
+            <!-- INICIA botones para cuando el estatus es 6 y por algun motivo se apago el celular y se quedo en dicho estatus -->
+            <button *ngIf="viaje.idEstatus == 6" ion-button icon-left round item-right size (click)="RedireccionaViajeTerminado(viaje)"
+                color="light">
+                <ion-icon name="checkmark-circle"></ion-icon>
+                Terminar
+            </button>            
+            <button *ngIf="viaje.idEstatus == 13 && (viaje.tipoViaje == 1 || viaje.tipoViaje == 3 || viaje.tipoViaje == 4 || viaje.tipoViaje == 5)" ion-button icon-left round item-right size (click)="RedireccionaEvidencias(viaje)"
+                color="light">
+                <ion-icon name="checkmark-circle"></ion-icon>
+                Evidencia
+            </button>
+            <button *ngIf="viaje.idEstatus == 13 && viaje.tipoViaje == 2" ion-button icon-left round item-right size (click)="RedireccionaDocumentos(viaje)"
+                color="light">
+                <ion-icon name="checkmark-circle"></ion-icon>
+                Documentos
+            </button>
+            <!-- TERMINA botones para cuando el estatus es 6 y por algun motivo se apago el celular y se quedo en dicho estatus -->
+        </ion-item>
+    </ion-card>
+    
+</ion-content>

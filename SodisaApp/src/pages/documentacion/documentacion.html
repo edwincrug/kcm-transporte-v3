@@ -1,0 +1,42 @@
+<!--
+  Generated template for the Documentacion page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-title>Documentación</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-card *ngFor="let factura of listaFacturas; let i = index">
+
+    <ion-item>
+      <h2>Cliente:{{factura.cliente}}</h2>
+      <p>Consignatario: {{factura.consignatario}}</p>
+    </ion-item>
+
+    <ion-card-content>
+      <p>Factura: {{factura.noFactura}}</p>
+    </ion-card-content>
+
+    <ion-item>
+      <ion-label>Entrega: {{factura.labelEntrega}}</ion-label>
+      <ion-toggle [checked]="factura.idEstatus" (ionChange)="CambiaEtiqueta(factura.idEstatus, i)"></ion-toggle>
+    </ion-item>
+
+  </ion-card>
+
+</ion-content>
+
+<ion-footer class="bar-stable" padding>
+  <div>
+    <button ion-button block round color="danger" (click)="RedirectEvidencia()">Confirmar</button>
+  </div>
+</ion-footer>
+<!--[(ngModel)]="factura.idEstatus"-->

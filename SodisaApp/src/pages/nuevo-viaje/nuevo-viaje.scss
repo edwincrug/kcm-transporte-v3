@@ -1,0 +1,10 @@
+page-nuevo-viaje {
+
+}
+
+#map {
+    width: 400px !important;
+    height: 350px !important;
+    opacity: 0;
+    transition: opacity 150ms ease-in
+}

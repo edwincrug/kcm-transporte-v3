@@ -1,0 +1,105 @@
+<ion-header>
+  <ion-toolbar color="secondary">
+    <ion-title>Juan Pérez Arriaga</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="HomePage">
+  <ion-fab top right edge>
+    <button ion-fab color="light"><ion-icon name="menu"></ion-icon></button>
+    <ion-fab-list>
+      <button ion-fab color="primary" (click)="viajesAsignados()"><ion-icon name="bus"></ion-icon></button>
+      <button ion-fab color="sync" (click)="redirectSync()"><ion-icon name="sync"></ion-icon></button>
+    </ion-fab-list>
+  </ion-fab>
+
+  <sebm-google-map id="map" [latitude]="map.lat" [longitude]="map.lng" [zoom]="map.zoom">
+    <sebm-google-map-marker [latitude]="map.lat" [longitude]="map.lng">
+      <sebm-google-map-info-window>
+        <strong>My location</strong>
+      </sebm-google-map-info-window>
+    </sebm-google-map-marker>
+  </sebm-google-map>
+</ion-content>
+
+<ion-footer class="bar-stable">
+  <div class="slot">
+    <ion-grid>
+      <ion-row>
+        <ion-col width-100>
+          <ion-card>
+            <ion-card-content>
+              Eco: T-MZ05U
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+      <div [hidden]="terminado == true">
+        <div padding>
+          <ion-segment [(ngModel)]="remolque">
+            <ion-segment-button value="remolque1">
+              Concentrado: IM233
+            </ion-segment-button>
+            <ion-segment-button value="remolque2">
+              Concentrado: PIOU2671
+            </ion-segment-button>
+          </ion-segment>
+
+        </div>
+
+        <div [ngSwitch]="remolque">
+          <ion-list *ngSwitchCase="'remolque1'">
+            <ion-item>
+              <ion-card>
+                <ion-card-content>
+                  <h2>Concentrado: 050074</h2>
+                  <h3>Origen: 10 - CEDIS COB</h3>
+                  <p>
+                    Destino: 654654|0 - TIENDA DEL SUR
+                  </p>
+                  <br>
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col width-25>
+                        <button ion-button icon-only color="primary" (click)="openModal()">
+                <ion-icon name="play"></ion-icon>
+              </button>
+                      </ion-col>
+                      <ion-col width-25>
+                        <button ion-button icon-only color="danger" (click)="terminaViaje()">
+                <ion-icon name="square"></ion-icon>                
+              </button>
+                      </ion-col>
+                      <ion-col width-25>
+                        <button ion-button icon-only color="secondary" (click)="openParadas()">
+                <ion-icon name="car"></ion-icon>
+              </button>
+                      </ion-col>
+                      <ion-col width-25>
+                        <button ion-button icon-only color="sync" (click)="openIncidentes()">
+                <ion-icon name="build"></ion-icon>
+              </button>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </ion-card-content>
+              </ion-card>
+            </ion-item>
+          </ion-list>
+
+          <ion-list *ngSwitchCase="'remolque2'">
+            <ion-item>
+              <ion-card>
+                <ion-card-content>
+                  SLOT 2
+                </ion-card-content>
+              </ion-card>
+            </ion-item>
+          </ion-list>
+        </div>
+      </div>
+
+    </ion-grid>
+  </div>
+</ion-footer>
