@@ -25,6 +25,7 @@ import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 import { WebApiProvider } from '../providers/web-api-provider';
 import { NetworkProvider } from '../providers/network-provider';
 import { LocalDataProvider } from '../providers/local-data-provider';
+import { ComunProvider } from '../providers/comun-provider';
 
 const cloudSettings: CloudSettings = {
   'core': {
@@ -87,6 +88,6 @@ const cloudSettings: CloudSettings = {
     ConfiguracionPage
   ],
   providers: [{ provide: ErrorHandler, useClass: IonicErrorHandler },
-    GoogleMapsAPIWrapper, WebApiProvider, NetworkProvider, LocalDataProvider]
+    GoogleMapsAPIWrapper, WebApiProvider, NetworkProvider, LocalDataProvider, ComunProvider]
 })
 export class AppModule { }

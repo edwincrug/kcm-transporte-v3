@@ -6,12 +6,11 @@
 -->
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar color="secondary">
     <ion-title>Configuración</ion-title>
   </ion-navbar>
 
 </ion-header>
-
 
 <ion-content padding>
   <ion-list>
@@ -19,14 +18,19 @@
       Catálogos
     </ion-list-header>
     <ion-item>
-      <ion-icon name="hand" item-left></ion-icon>
+      <ion-icon name="hand" item-left color="primary"></ion-icon>
       <h2>Paradas permitidas </h2>
-      <p>Última actualización: </p>
+      <p>Última actualización: <br> <strong>{{lastDateParada}}</strong> </p>
+      <button ion-button round item-right color="secondary" (click)="showConfirm(1)">Actualizar</button>
     </ion-item>
+
     <ion-item>
+      <ion-icon name="alert" item-left color="light"></ion-icon>
       <h2>Incidentes </h2>
-      <p>Última actualización: </p>
+      <p>Última actualización: <br> <strong>{{lastDateIncidente}}</strong> </p>
+      <button ion-button round item-right color="secondary" (click)="showConfirm(2)">Actualizar</button>
     </ion-item>
+
   </ion-list>
 
 </ion-content>

@@ -17,7 +17,7 @@ export class LocalDataProvider {
 
   openDatabase() {
     return this.db.openDatabase({
-      name: 'sodisa.db',
+      name: 'sodisaV3.db',
       location: 'default' // the location field is required      
     });
   }
@@ -54,6 +54,16 @@ export class LocalDataProvider {
 
   createTableUltimaActualizacion() {
     let sql = 'CREATE TABLE IF NOT EXISTS UltimaActualizacion(idUltimaActualizacion INTEGER PRIMARY KEY AUTOINCREMENT, fecha TEXT); ';
+    return this.db.executeSql(sql, []);
+  }
+
+  createTableParada() {
+    let sql = 'CREATE TABLE IF NOT EXISTS Parada(idParada INTEGER PRIMARY KEY AUTOINCREMENT, idEvento INTEGER, descripcion TEXT, ultimaActualizacion TEXT); ';
+    return this.db.executeSql(sql, []);
+  }
+
+  createTableIncidente() {
+    let sql = 'CREATE TABLE IF NOT EXISTS Incidente(idIncidente INTEGER PRIMARY KEY AUTOINCREMENT, idEvento INTEGER, descripcion TEXT, ultimaActualizacion TEXT); ';
     return this.db.executeSql(sql, []);
   }
 
@@ -222,7 +232,7 @@ export class LocalDataProvider {
     return this.db.executeSql(sql, [idViajeSync]);
   }
 
-  viajesPorSincronizar() { 
+  viajesPorSincronizar() {
     let viajeSyncQuery = "SELECT (CASE ViajeSync.idEstatus WHEN 1 THEN 'Pendiente de Asignar' WHEN 2 THEN 'Asignado' WHEN 3 THEN 'Aceptado' WHEN 4 THEN 'Rechazado' WHEN 5 THEN 'Salida' WHEN 6 THEN 'Llegada' WHEN 7 THEN 'Pendiente de asignar maniobra' WHEN 8 THEN 'Maniobra asignada' WHEN 9 THEN 'Maniobra aceptada' WHEN 10 THEN 'Maniobra rechazada' WHEN 11 THEN 'Inicia maniobra' WHEN 12 THEN 'Carga-Descarga' WHEN 13 THEN 'Fin maniobra' WHEN 14 THEN 'Entrega total' WHEN 15 THEN 'Entrega parcial' WHEN 16 THEN 'Cancelado' WHEN 17 THEN 'Terminado' ELSE 'ESTATUS NO ASIGNADO LOCALMENTE' END) AS estatus, * FROM ViajeSync ORDER BY ViajeSync.idViaje, ViajeSync.idEstatus ASC ";
     return this.db.executeSql(viajeSyncQuery, []).then(response => {
       let hayViajes = [];
@@ -422,6 +432,60 @@ export class LocalDataProvider {
       }
       return Promise.resolve(hayViajes);
     });
+  }
+
+  eliminaParadas() {
+    let sql = "DELETE FROM Parada ";
+    return this.db.executeSql(sql, []);
+  }
+
+  eliminaIncidente() {
+    let sql = "DELETE FROM Incidente ";
+    return this.db.executeSql(sql, []);
+  }
+
+  insertaCatalogoParadas(idEvento, descripcion) {
+    let viajeQuery = "INSERT INTO Parada (idEvento, descripcion) VALUES (?, ?); ";
+    return this.db.executeSql(viajeQuery, [idEvento, descripcion]);
+  }
+
+  insertaCatalogoIncidente(idEvento, descripcion) {
+    let viajeQuery = "INSERT INTO Incidente (idEvento, descripcion) VALUES (?, ?); ";
+    return this.db.executeSql(viajeQuery, [idEvento, descripcion]);
+  }
+
+  actualizaFechaCatalogoParada(fecha) {
+    let sql = "UPDATE Parada SET ultimaActualizacion = ?";
+    return this.db.executeSql(sql, [fecha]);
+  }
+
+  actualizaFechaCatalogoIncidente(fecha) {
+    let sql = "UPDATE Incidente SET ultimaActualizacion = ?";
+    return this.db.executeSql(sql, [fecha]);
+  }
+
+  getUltimoUpdateParada() {
+    let sql = 'SELECT ultimaActualizacion FROM Parada LIMIT 1 ';
+    return this.db.executeSql(sql, [])
+      .then(response => {
+        if (response.rows.length > 0) {
+          return Promise.resolve(response.rows.item(0));
+        }
+      }).catch(error => {
+        return Promise.resolve('ERROR');
+      });
+  }
+
+  getUltimoUpdateIncidente() {
+    let sql = 'SELECT ultimaActualizacion FROM Incidente LIMIT 1 ';
+    return this.db.executeSql(sql, [])
+      .then(response => {
+        if (response.rows.length > 0) {
+          return Promise.resolve(response.rows.item(0));
+        }
+      }).catch(error => {
+        return Promise.resolve('ERROR');
+      });
   }
 
 }
