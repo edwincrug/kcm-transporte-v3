@@ -134,13 +134,17 @@ export class ConfiguracionPage {
 
   obtieneUltimaActualizacionParada() {
     this.dataServices.getUltimoUpdateParada().then(resp => {
-      this.lastDateParada = resp.ultimaActualizacion;
+      if (resp.ultimaActualizacion != null) {
+        this.lastDateParada = resp.ultimaActualizacion;
+      }
     });
   }
 
   obtieneUltimaActualizacionIncidente() {
     this.dataServices.getUltimoUpdateIncidente().then(resp => {
-      this.lastDateIncidente = resp.ultimaActualizacion;
+      if (resp.ultimaActualizacion != null) {
+        this.lastDateIncidente = resp.ultimaActualizacion;
+      }
     });
   }
 

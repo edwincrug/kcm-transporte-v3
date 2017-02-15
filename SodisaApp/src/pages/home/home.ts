@@ -465,62 +465,46 @@ export class HomePage {
     let alert = this.alertCtrl.create();
     alert.setTitle('Motivos parada en ruta');
 
-    alert.addInput({
-      type: 'radio',
-      label: 'Carga de combustible',
-      value: '1',
-      checked: false
+    let alertAviso = this.alertCtrl.create({
+      subTitle: 'Información no disponible',
+      buttons: ['OK']
     });
 
-    alert.addInput({
-      type: 'radio',
-      label: 'Manifestación',
-      value: '2',
-      checked: false
-    });
+    this.dataServices.getParadas().then(data => {
+      if (data != null) {
+        if (data.length > 0) {
+          for (let x = 0; x < data.length; x++) {
+            alert.addInput({
+              type: 'radio',
+              label: data[x].descripcion,
+              value: data[x].idEvento,
+              checked: false
+            });
+          }
 
-    alert.addInput({
-      type: 'radio',
-      label: 'Mal clima',
-      value: '3',
-      checked: false
-    });
+          alert.addButton('Cerrar');
+          alert.addButton({
+            text: 'Aceptar',
+            handler: data => {
+              this.idParadaSelected = data;
 
-    alert.addInput({
-      type: 'radio',
-      label: 'Comida',
-      value: '4',
-      checked: false
-    });
+              if (this.idParadaSelected != null) {
+                this.OpenModalParadas(idViaje, idOrigen, idConcentrado, this.idParadaSelected);
+              }
 
-    alert.addInput({
-      type: 'radio',
-      label: 'Descanso',
-      value: '5',
-      checked: false
-    });
+            }
+          });
 
-    alert.addInput({
-      type: 'radio',
-      label: 'Otro',
-      value: '6',
-      checked: false
-    });
-
-    alert.addButton('Cerrar');
-    alert.addButton({
-      text: 'Aceptar',
-      handler: data => {
-        this.idParadaSelected = data;
-
-        if (this.idParadaSelected != null) {
-          this.OpenModalParadas(idViaje, idOrigen, idConcentrado, this.idParadaSelected);
+          alert.present();
         }
-
+        else {
+          alertAviso.present();
+        }
+      }
+      else {
+        alertAviso.present();
       }
     });
-
-    alert.present();
 
   }
 
@@ -541,62 +525,46 @@ export class HomePage {
     let alert = this.alertCtrl.create();
     alert.setTitle('Incidentes');
 
-    alert.addInput({
-      type: 'radio',
-      label: 'Bloqueo de tarjeta Iave',
-      value: '1',
-      checked: false
+    let alertAviso = this.alertCtrl.create({
+      subTitle: 'Información no disponible',
+      buttons: ['OK']
     });
 
-    alert.addInput({
-      type: 'radio',
-      label: 'Desvio de ruta',
-      value: '2',
-      checked: false
-    });
+    this.dataServices.getIncidentes().then(data => {
+      if (data != null) {
+        if (data.length > 0) {
+          for (let x = 0; x < data.length; x++) {
+            alert.addInput({
+              type: 'radio',
+              label: data[x].descripcion,
+              value: data[x].idEvento,
+              checked: false
+            });
+          }
 
-    alert.addInput({
-      type: 'radio',
-      label: 'Falla mecánica',
-      value: '3',
-      checked: false
-    });
+          alert.addButton('Cerrar');
+          alert.addButton({
+            text: 'Aceptar',
+            handler: data => {
+              this.idIncidenteSelected = data;
 
-    alert.addInput({
-      type: 'radio',
-      label: 'Intento de robo',
-      value: '4',
-      checked: false
-    });
+              if (this.idIncidenteSelected != null) {
+                this.OpenModalIncidentes(idViaje, idOrigen, idConcentrado, this.idIncidenteSelected);
+              }
 
-    alert.addInput({
-      type: 'radio',
-      label: 'Siniestro unidad',
-      value: '5',
-      checked: false
-    });
+            }
+          });
 
-    alert.addInput({
-      type: 'radio',
-      label: 'Otro',
-      value: '6',
-      checked: false
-    });
-
-    alert.addButton('Cerrar');
-    alert.addButton({
-      text: 'Aceptar',
-      handler: data => {
-        this.idIncidenteSelected = data;
-
-        if (this.idIncidenteSelected != null) {
-          this.OpenModalIncidentes(idViaje, idOrigen, idConcentrado, this.idIncidenteSelected);
+          alert.present();
         }
-
+        else {
+          alertAviso.present();
+        }
+      }
+      else {
+        alertAviso.present();
       }
     });
-
-    alert.present();
 
   }
 

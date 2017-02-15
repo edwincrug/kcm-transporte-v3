@@ -488,4 +488,72 @@ export class LocalDataProvider {
       });
   }
 
+  getParadas() {
+    let sql = 'SELECT idEvento, descripcion FROM Parada ';
+    return this.db.executeSql(sql, [])
+      .then(response => {
+
+        if (response.rows.length > 0) {
+          let lstParadas = [];
+          for (let index = 0; index < response.rows.length; index++) {
+            lstParadas.push(response.rows.item(index));
+          }
+          return Promise.resolve(lstParadas);
+        }
+
+      }).catch(error => {
+        return Promise.resolve('ERROR');
+      });
+  }
+
+  getIncidentes() {
+    let sql = 'SELECT idEvento, descripcion FROM Incidente ';
+    return this.db.executeSql(sql, [])
+      .then(response => {
+        if (response.rows.length > 0) {
+          let lstIncidentes = [];
+          for (let index = 0; index < response.rows.length; index++) {
+            lstIncidentes.push(response.rows.item(index));
+          }
+          return Promise.resolve(lstIncidentes);
+        }
+      }).catch(error => {
+        return Promise.resolve('ERROR');
+      });
+  }
+
+  getDescripcionParada(idEvento) {
+    let sql = 'SELECT descripcion FROM Parada WHERE idEvento = ? ';
+    return this.db.executeSql(sql, [idEvento])
+      .then(response => {
+
+        if (response.rows.length > 0) {
+          return Promise.resolve(response.rows.item(0));
+        }
+        else {
+          return Promise.resolve('Descripción no encontrada');
+        }
+
+      }).catch(error => {
+        return Promise.resolve('ERROR');
+      });
+  }
+
+  getDescripcionIncidente(idEvento) {
+    let sql = 'SELECT descripcion FROM Incidente WHERE idEvento = ? ';
+    return this.db.executeSql(sql, [idEvento])
+      .then(response => {
+
+        if (response.rows.length > 0) {
+          return Promise.resolve(response.rows.item(0));
+        }
+        else {
+          return Promise.resolve('Descripción no encontrada');
+        }
+
+      }).catch(error => {
+        return Promise.resolve('ERROR');
+      });
+  }
+
 }

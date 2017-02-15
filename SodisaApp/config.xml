@@ -42,7 +42,7 @@
     <preference name="android-minSdkVersion" value="16" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="SplashMaintainAspectRatio" value="true" />
-    <preference name="SplashScreenDelay" value="18000" />
+    <preference name="SplashScreenDelay" value="19000" />
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashShowOnlyFirstTime" value="false" />
     <feature name="StatusBar">

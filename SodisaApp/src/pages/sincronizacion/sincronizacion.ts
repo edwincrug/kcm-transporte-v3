@@ -247,50 +247,20 @@ export class SincronizacionPage {
           this.listaIncidentesPorSincronizar = response;
           this.listaIncidentesPorSincronizar.forEach(element => {
             if (element.idTipoEvento == 1) {
-              switch (element.idEvento) {
-                case 1:
-                  element.mensajeEvidencia = "Carga de combustible";
-                  break;
-                case 2:
-                  element.mensajeEvidencia = "Manifestación";
-                  break;
-                case 3:
-                  element.mensajeEvidencia = "Mal clima";
-                  break;
-                case 4:
-                  element.mensajeEvidencia = "Comida";
-                  break;
-                case 5:
-                  element.mensajeEvidencia = "Descanso";
-                  break;
-                case 6:
-                  element.mensajeEvidencia = "Otro";
-                  break;
-              }
+
               element.evidencia = "data:image/jpeg;base64," + element.evidencia;
+              this.dataServices.getDescripcionParada(element.idEvento).then(data => {
+                element.mensajeEvidencia = data.descripcion;
+              });
+
             }
             else if (element.idTipoEvento == 2) {
-              switch (element.idEvento) {
-                case 1:
-                  element.mensajeEvidencia = 'Bloqueo de tarjeta Iave';
-                  break;
-                case 2:
-                  element.mensajeEvidencia = 'Desvio de ruta';
-                  break;
-                case 3:
-                  element.mensajeEvidencia = 'Falla mecánica';
-                  break;
-                case 4:
-                  element.mensajeEvidencia = 'Intento de robo';
-                  break;
-                case 5:
-                  element.mensajeEvidencia = 'Siniestro unidad';
-                  break;
-                case 6:
-                  element.mensajeEvidencia = 'Otro';
-                  break;
-              }
+
               element.evidencia = "data:image/jpeg;base64," + element.evidencia;
+              this.dataServices.getDescripcionIncidente(element.idEvento).then(data => {
+                element.mensajeEvidencia = data.descripcion;
+              });
+
             }
 
             console.log('entre');
