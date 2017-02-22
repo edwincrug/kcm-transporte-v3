@@ -1,5 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Http } from '@angular/http';
+import { Geolocation, Geoposition, BackgroundGeolocation } from 'ionic-native';
+
 import 'rxjs/add/operator/map';
 
 /*
@@ -10,8 +12,12 @@ import 'rxjs/add/operator/map';
 */
 @Injectable()
 export class ComunProvider {
+  public lat: number = 0;
+  public lng: number = 0;
+  public coordenadas: string;
+  public watch: any;
 
-  constructor(public http: Http) {
+  constructor(public http: Http, public zone: NgZone) {
     console.log('Hello ComunProvider Provider');
   }
 
@@ -57,6 +63,37 @@ export class ComunProvider {
     let fechaEnviada = diaFinal + '-' + mesFinal + '-' + fecha.getFullYear() + ' ' + horaFinal + ':' + minutoFinal;
 
     return fechaEnviada;
+  }
+
+  obtieneCoordenadas(descripcion) {
+    let options = {
+      enableHighAccuracy: true
+    };
+
+    this.watch = Geolocation.watchPosition(options).subscribe((position: Geoposition) => {
+      //console.log(position);
+
+      this.zone.run(() => {
+        this.lat = position.coords.latitude;
+        this.lng = position.coords.longitude;
+
+        if (this.lat == null || this.lng == null) {
+          if (descripcion == 1) {
+            this.coordenadas = 'Sin Cobertura';
+          }
+          else {
+            this.coordenadas = null;
+          }
+        }
+        else {
+          this.coordenadas = this.lat.toString() + ', ' + this.lng.toString();
+        }
+
+      });
+
+    });    
+
+    return this.coordenadas;
   }
 
 }

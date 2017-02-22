@@ -67,6 +67,14 @@ export class LocalDataProvider {
     return this.db.executeSql(sql, []);
   }
 
+  createTableFrecuenciaGPS() {
+    let sql = 'CREATE TABLE IF NOT EXISTS FrecuenciaGPS(idFrecuencia INTEGER PRIMARY KEY AUTOINCREMENT, tiempo INTEGER); ';
+    return this.db.executeSql(sql, []).then(() => {
+      let sqlQuery = 'INSERT INTO FrecuenciaGPS (tiempo) VALUES (30000)';
+      return this.db.executeSql(sqlQuery, []);
+    });
+  }
+
   getAll() {
     let sql = 'SELECT * FROM Usuario';
     return this.db.executeSql(sql, [])
@@ -554,6 +562,23 @@ export class LocalDataProvider {
       }).catch(error => {
         return Promise.resolve('ERROR');
       });
+  }
+
+  getFrecuenciaNotificacion() {
+    let sql = 'SELECT tiempo FROM FrecuenciaGPS LIMIT 1 ';
+    return this.db.executeSql(sql, [])
+      .then(response => {
+        if (response.rows.length > 0) {
+          return Promise.resolve(response.rows.item(0));
+        }
+      }).catch(error => {
+        return Promise.resolve('ERROR');
+      });
+  }
+
+  actualizaFrecuenciaNotificacion(tiempo) {
+    let sql = "UPDATE FrecuenciaGPS SET tiempo = ?";
+    return this.db.executeSql(sql, [tiempo]);
   }
 
 }

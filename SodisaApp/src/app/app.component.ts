@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { Platform } from 'ionic-angular';
-import { StatusBar, Splashscreen } from 'ionic-native';
+import { StatusBar, Splashscreen, Device } from 'ionic-native';
 import { Http } from '@angular/http';
 import { Push, PushToken } from '@ionic/cloud-angular';
 
@@ -8,6 +8,8 @@ import { LoginPage } from '../pages/login/login';
 
 import { WebApiProvider } from '../providers/web-api-provider';
 import { LocalDataProvider } from '../providers/local-data-provider';
+import { NetworkProvider } from '../providers/network-provider';
+import { ComunProvider } from '../providers/comun-provider';
 
 
 @Component({
@@ -18,7 +20,8 @@ export class MyApp {
   mesFinal: string;
 
   constructor(public platform: Platform, public sodisaService: WebApiProvider, public dataServices: LocalDataProvider,
-    public http: Http, public push: Push) {
+    public http: Http, public push: Push, public networkService: NetworkProvider,
+    public comunService: ComunProvider, public zone: NgZone) {
 
     this.initializeApp();
 
@@ -31,6 +34,19 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       StatusBar.styleDefault();
       Splashscreen.hide();
+
+      let tiempo: number = 10000;
+
+      let wsSodisa = new WebApiProvider(this.http);
+      let lstDocumento = [];
+      let networkState = new NetworkProvider(this.http, this.platform);
+      let objComun = new ComunProvider(this.http, this.zone);
+
+      console.log('Tiempo inicial: ' + tiempo);
+
+      // wsSodisa.ultimaUbicacion(Device.uuid, objComun.obtieneCoordenadas(0)).subscribe(resp => {
+      //   console.log('Registra ubicación en background: ' + objComun.obtieneCoordenadas(0));
+      // });
 
       this.dataServices.openDatabase()
         .then(() => this.dataServices.createTableUsuario())
@@ -98,12 +114,38 @@ export class MyApp {
           });
 
         }))
+        .then(() => this.dataServices.createTableFrecuenciaGPS().then(data => {
+          this.dataServices.getFrecuenciaNotificacion().then(data => {
+            console.log('Tiempo de notificación: ' + data.tiempo);
+            tiempo = data.tiempo;
+          }).catch(error => {
+            console.log('Error Tiempo Frecuencia: ' + error);
+          });
+        }))
         .then(() => {
           this.rootPage = LoginPage;
         });
 
-      let wsSodisa = new WebApiProvider(this.http);
-      let lstDocumento = [];
+
+      setInterval(function () {
+        let dbService = new LocalDataProvider();
+        console.log('setInterval: ' + tiempo.toString());
+
+        if (!networkState.noConnection()) {
+          dbService.openDatabase().then(() => {
+            dbService.getFrecuenciaNotificacion().then(data => {
+              tiempo = data.tiempo;
+              console.log('Tiempo en base: ' + data.tiempo);
+            });
+          });
+
+
+          wsSodisa.ultimaUbicacion(Device.uuid, objComun.obtieneCoordenadas(0)).subscribe(resp => {
+            console.log('Registra ubicación: ' + objComun.obtieneCoordenadas(0));
+          });
+        }
+      }, tiempo);
+
       document.addEventListener("online", function () {
         //alert('Entra online Bandera: ' + internetConnected);
         if (internetConnected) {

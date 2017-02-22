@@ -24,6 +24,7 @@ export class ConfiguracionPage {
   economico: string;
   lastDateParada: string;
   lastDateIncidente: string;
+  lastDateFrecuencia: number;
 
   constructor(public navCtrl: NavController, public params: NavParams, public dataServices: LocalDataProvider,
     public sodisaService: WebApiProvider, public networkService: NetworkProvider, public alertCtrl: AlertController,
@@ -145,6 +146,62 @@ export class ConfiguracionPage {
       if (resp.ultimaActualizacion != null) {
         this.lastDateIncidente = resp.ultimaActualizacion;
       }
+    });
+  }
+
+  showConfirmFrecuency() {
+    if (this.networkService.noConnection()) {
+      let alert = this.alertCtrl.create({
+        subTitle: 'Sin cobertura',
+        buttons: ['OK']
+      });
+      alert.present();
+    }
+    else {
+
+      let confirm = this.alertCtrl.create({
+        title: 'Advertencia',
+        message: '¿Está seguro en actualizar la frecuencia del GPS?',
+        buttons: [
+          {
+            text: 'No'
+          },
+          {
+            text: 'Si',
+            handler: () => {
+              this.updateFrecuency();
+            }
+          }
+        ]
+      });
+      confirm.present();
+
+    }
+  }
+
+  updateFrecuency() {
+    let alert = this.alertCtrl.create({
+      subTitle: 'La actualización no se pudo llevar a cabo, inténtelo más tarde',
+      buttons: ['OK']
+    });
+
+    let alertUpdate = this.alertCtrl.create({
+      subTitle: 'Frecuencia actualizada correctamente',
+      buttons: ['OK']
+    });
+
+    let loading = this.loadingCtrl.create({
+      content: 'Actualizando...'
+    });
+    loading.present();
+
+    this.dataServices.actualizaFrecuenciaNotificacion(this.lastDateFrecuencia).then(() => {
+      this.obtieneUltimaActualizacionParada();
+      loading.dismiss();
+      alertUpdate.present();
+    }).catch(error => {
+      loading.dismiss();
+      alert.present();
     });
   }
 

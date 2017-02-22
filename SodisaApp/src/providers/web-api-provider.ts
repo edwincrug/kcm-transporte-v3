@@ -107,5 +107,18 @@ export class WebApiProvider {
         return this.data;
       });
   }
+
+  ultimaUbicacion(idDispositivo, coordenadas): Observable<any> {
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+
+    let body = "{ strGeolocalizacionVc: '" + coordenadas + "', strIdDispositivo: '" + idDispositivo + "' }";
+
+    return this.http.post(this.url + 'recibeUbicacionActual', body, options)
+      .map((res: Response) => {
+        this.data = res.json();
+        return this.data;
+      });
+  }
   
 }
