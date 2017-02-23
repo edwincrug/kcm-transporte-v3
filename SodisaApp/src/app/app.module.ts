@@ -16,6 +16,7 @@ import { ManiobraPage } from '../pages/maniobra/maniobra';
 import { ModalParadasPage } from '../pages/modal-paradas/modal-paradas';
 import { ModalIncidentePage } from '../pages/modal-incidente/modal-incidente';
 import { ConfiguracionPage } from '../pages/configuracion/configuracion';
+import { ModalFrecuenciaPage } from '../pages/modal-frecuencia/modal-frecuencia';
 
 import { AgmCoreModule } from 'angular2-google-maps/core';
 import { GoogleMapsAPIWrapper } from 'angular2-google-maps/core/services/google-maps-api-wrapper';
@@ -58,7 +59,8 @@ const cloudSettings: CloudSettings = {
     ManiobraPage,
     ModalParadasPage,
     ModalIncidentePage,
-    ConfiguracionPage
+    ConfiguracionPage,
+    ModalFrecuenciaPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -85,7 +87,8 @@ const cloudSettings: CloudSettings = {
     ManiobraPage,
     ModalParadasPage,
     ModalIncidentePage,
-    ConfiguracionPage
+    ConfiguracionPage,
+    ModalFrecuenciaPage
   ],
   providers: [{ provide: ErrorHandler, useClass: IonicErrorHandler },
     GoogleMapsAPIWrapper, WebApiProvider, NetworkProvider, LocalDataProvider, ComunProvider]

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
+import { NavController, NavParams, AlertController, LoadingController, ModalController } from 'ionic-angular';
 
 import { HomePage } from '../home/home';
 
@@ -28,7 +28,7 @@ export class ConfiguracionPage {
 
   constructor(public navCtrl: NavController, public params: NavParams, public dataServices: LocalDataProvider,
     public sodisaService: WebApiProvider, public networkService: NetworkProvider, public alertCtrl: AlertController,
-    public loadingCtrl: LoadingController, public comunService: ComunProvider) {
+    public loadingCtrl: LoadingController, public comunService: ComunProvider, public modalCtrl: ModalController) {
 
     this.username = params.get('usuario');
     this.nombre = params.get('nombre');
@@ -38,6 +38,7 @@ export class ConfiguracionPage {
   ionViewDidLoad() {
     this.obtieneUltimaActualizacionParada();
     this.obtieneUltimaActualizacionIncidente();
+    this.obtieneUltimaActualizacionFrecuencia();
   }
 
   redirectHome() {
@@ -149,6 +150,14 @@ export class ConfiguracionPage {
     });
   }
 
+  obtieneUltimaActualizacionFrecuencia() {
+    this.dataServices.getFrecuenciaNotificacion().then(resp => {
+      if (resp.tiempo != null) {
+        this.lastDateFrecuencia = (resp.tiempo / 60000);
+      }
+    });
+  }
+
   showConfirmFrecuency() {
     if (this.networkService.noConnection()) {
       let alert = this.alertCtrl.create({
@@ -190,20 +199,49 @@ export class ConfiguracionPage {
       buttons: ['OK']
     });
 
-    let loading = this.loadingCtrl.create({
-      content: 'Actualizando...'
-    });
-    loading.present();
 
-    this.dataServices.actualizaFrecuenciaNotificacion(this.lastDateFrecuencia).then(() => {
-      this.obtieneUltimaActualizacionParada();
-      loading.dismiss();
-      alertUpdate.present();
-    }).catch(error => {
-      loading.dismiss();
-      alert.present();
-    });
+    let respuesta = this.validaFrecuencia(this.lastDateFrecuencia);
+    if (respuesta == 'OK') {
+      let loading = this.loadingCtrl.create({
+        content: 'Actualizando...'
+      });
+      loading.present();
+
+      this.dataServices.actualizaFrecuenciaNotificacion((this.lastDateFrecuencia * 60000)).then(() => {
+        loading.dismiss();
+        this.obtieneUltimaActualizacionFrecuencia();
+        alertUpdate.present();
+      }).catch(error => {
+        loading.dismiss();
+        alert.present();
+      });
+    }
+    else {
+      let alertError = this.alertCtrl.create({
+        subTitle: respuesta,
+        buttons: ['OK']
+      });
+
+      alertError.present();
+    }
+
+  }
+
+  validaFrecuencia(frecuencia) {
+    let subTitle: string = 'OK';
+
+    if (frecuencia == null) {
+      subTitle = 'Debe capturar la frecuencia';
+    }
+    else if (frecuencia < 15) {
+      subTitle = 'La frecuencia mínima debe ser de 15 minutos';
+    }
+
+    return subTitle;
   }
 
 }
+
+
+
 

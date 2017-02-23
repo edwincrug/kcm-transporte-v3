@@ -36,11 +36,10 @@
       Ubicación GPS
     </ion-list-header>
     <ion-item>
-      <ion-icon name="alarm" item-left color="primary"></ion-icon>
+      <ion-icon name="alarm" item-left color="sync"></ion-icon>
       <h2>Frecuencia </h2>
-      <p>Tiempo: <br> <strong>{{lastDateFrecuencia}}</strong> </p>
-      <ion-input [(ngModel)]="lastDateFrecuencia" type="number" min="900000" placeholder="{{lastDateFrecuencia}}"></ion-input>
-      <button ion-button round item-right color="secondary" (click)="showConfirmFrecuency()">Actualizar</button>
+      <p>Tiempo: <br> <strong>{{lastDateFrecuencia}} minutos </strong></p>
+      <button ion-button round item-right color="secondary" (click)="showConfirmFrecuency()">Modificar</button>
     </ion-item>
 
   </ion-list>
