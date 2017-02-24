@@ -40,7 +40,7 @@ export class MyApp {
       let wsSodisa = new WebApiProvider(this.http);
       let lstDocumento = [];
       let networkState = new NetworkProvider(this.http, this.platform);
-      let objComun = new ComunProvider(this.http, this.zone);
+      let objComun = new ComunProvider(this.http, this.zone, this.push);
 
       console.log('Tiempo inicial: ' + tiempo);
 
@@ -353,11 +353,12 @@ export class MyApp {
 
     });
 
-    this.push.register().then((t: PushToken) => {
-      return this.push.saveToken(t);
-    }).then((t: PushToken) => {
-      console.log('Token saved:', t.token);
-    });
+    // this.push.register().then((t: PushToken) => {
+    //   return this.push.saveToken(t);
+    // }).then((t: PushToken) => {
+    //   alert(t.token);
+    //   console.log('Token saved:', t.token);
+    // });
 
     this.push.rx.notification()
       .subscribe((msg) => {

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, AlertController, LoadingController, ModalController } from 'ionic-angular';
 
 import { HomePage } from '../home/home';
+import { ModalFrecuenciaPage } from '../modal-frecuencia/modal-frecuencia';
 
 import { WebApiProvider } from '../../providers/web-api-provider';
 import { LocalDataProvider } from '../../providers/local-data-provider';
@@ -159,71 +160,57 @@ export class ConfiguracionPage {
   }
 
   showConfirmFrecuency() {
-    if (this.networkService.noConnection()) {
-      let alert = this.alertCtrl.create({
-        subTitle: 'Sin cobertura',
-        buttons: ['OK']
-      });
-      alert.present();
-    }
-    else {
-
-      let confirm = this.alertCtrl.create({
-        title: 'Advertencia',
-        message: '¿Está seguro en actualizar la frecuencia del GPS?',
-        buttons: [
-          {
-            text: 'No'
-          },
-          {
-            text: 'Si',
-            handler: () => {
-              this.updateFrecuency();
-            }
+    let confirm = this.alertCtrl.create({
+      title: 'Advertencia',
+      message: '¿Está seguro en actualizar la frecuencia del GPS?',
+      buttons: [
+        {
+          text: 'No'
+        },
+        {
+          text: 'Si',
+          handler: () => {
+            this.updateFrecuency();
           }
-        ]
-      });
-      confirm.present();
-
-    }
+        }
+      ]
+    });
+    confirm.present();
   }
 
   updateFrecuency() {
-    let alert = this.alertCtrl.create({
-      subTitle: 'La actualización no se pudo llevar a cabo, inténtelo más tarde',
-      buttons: ['OK']
+    let modal = this.modalCtrl.create(ModalFrecuenciaPage, {
+      tiempo: this.lastDateFrecuencia
     });
+    modal.present();
 
-    let alertUpdate = this.alertCtrl.create({
-      subTitle: 'Frecuencia actualizada correctamente',
-      buttons: ['OK']
+    modal.onDidDismiss(res => {
+      if (res.tiempo != 0) {
+        let alert = this.alertCtrl.create({
+          subTitle: 'La actualización no se pudo llevar a cabo, inténtelo más tarde',
+          buttons: ['OK']
+        });
+
+        let alertUpdate = this.alertCtrl.create({
+          subTitle: 'Frecuencia actualizada correctamente',
+          buttons: ['OK']
+        });
+
+        let loading = this.loadingCtrl.create({
+          content: 'Actualizando...'
+        });
+        loading.present();
+
+        this.dataServices.actualizaFrecuenciaNotificacion((res.tiempo * 60000)).then(() => {
+          loading.dismiss();
+          this.obtieneUltimaActualizacionFrecuencia();
+          alertUpdate.present();
+        }).catch(error => {
+          loading.dismiss();
+          alert.present();
+        });
+      }
     });
-
-
-    let respuesta = this.validaFrecuencia(this.lastDateFrecuencia);
-    if (respuesta == 'OK') {
-      let loading = this.loadingCtrl.create({
-        content: 'Actualizando...'
-      });
-      loading.present();
-
-      this.dataServices.actualizaFrecuenciaNotificacion((this.lastDateFrecuencia * 60000)).then(() => {
-        loading.dismiss();
-        this.obtieneUltimaActualizacionFrecuencia();
-        alertUpdate.present();
-      }).catch(error => {
-        loading.dismiss();
-        alert.present();
-      });
-    }
-    else {
-      let alertError = this.alertCtrl.create({
-        subTitle: respuesta,
-        buttons: ['OK']
-      });
-
-      alertError.present();
-    }
 
   }
 

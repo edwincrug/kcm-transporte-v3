@@ -5,6 +5,7 @@ import { Device } from 'ionic-native';
 import { NetworkProvider } from '../../providers/network-provider';
 import { LocalDataProvider } from '../../providers/local-data-provider';
 import { WebApiProvider } from '../../providers/web-api-provider';
+import { ComunProvider } from '../../providers/comun-provider';
 
 import { HomePage } from '../home/home';
 
@@ -25,10 +26,11 @@ export class LoginPage {
   public credenciales: any;
   mensaje: string;
   listaViajesAsignados: any[] = [];
+  tokenPushNotification: string = null;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public toastCtrl: ToastController,
     private loadingCtrl: LoadingController, public networkService: NetworkProvider, public dataServices: LocalDataProvider,
-    private sodisaService: WebApiProvider, public alertCtrl: AlertController) { }
+    private sodisaService: WebApiProvider, public alertCtrl: AlertController, public comunService: ComunProvider) { }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
@@ -59,6 +61,16 @@ export class LoginPage {
             alert.present();
           }
           else {
+            this.comunService.generaTokenPushNotificacion().then(resp => {
+              if (resp != null) {
+                this.sodisaService.enviaNotificacionToken(Device.uuid, resp).subscribe(data => {
+                  console.log('Respuesta de envio de Token: ' + data.pResponseCode);
+                });
+              }
+            });
+
+
+
             this.sodisaService.login(this.username, this.password, this.imei).subscribe(data => {
               loading.dismiss();
               this.credenciales = data;
@@ -68,6 +80,14 @@ export class LoginPage {
 
         }
         else {
+          this.comunService.generaTokenPushNotificacion().then(resp => {
+            if (resp != null) {
+              this.sodisaService.enviaNotificacionToken(Device.uuid, resp).subscribe(data => {
+                console.log('Respuesta de envio de Token: ' + data.pResponseCode);
+              });
+            }
+          });
+
           this.sodisaService.login(this.username, this.password, this.imei).subscribe(data => {
             loading.dismiss();
             this.credenciales = data;

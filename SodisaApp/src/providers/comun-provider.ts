@@ -1,6 +1,8 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Http } from '@angular/http';
 import { Geolocation, Geoposition, BackgroundGeolocation } from 'ionic-native';
+import { Push, PushToken } from '@ionic/cloud-angular';
+import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/map';
 
@@ -17,7 +19,7 @@ export class ComunProvider {
   public coordenadas: string;
   public watch: any;
 
-  constructor(public http: Http, public zone: NgZone) {
+  constructor(public http: Http, public zone: NgZone, public push: Push) {
     console.log('Hello ComunProvider Provider');
   }
 
@@ -91,9 +93,21 @@ export class ComunProvider {
 
       });
 
-    });    
+    });
 
     return this.coordenadas;
+  }
+
+  generaTokenPushNotificacion() {
+    return this.push.register().then((t: PushToken) => {
+      return this.push.saveToken(t);
+    }).then((t: PushToken) => {
+      console.log('Token saved:', t.token);
+      return t.token;
+    }).catch(error => {
+      console.log('Error al generar Token: ' + error);
+    });
+
   }
 
 }

@@ -18,6 +18,7 @@ export class WebApiProvider {
 
   login(pIdOperador, pPasswordOperador, pIMEI): Observable<any> {
     //let imei = "'" + pIMEI + "'";
+
     return this.http.get(this.url + 'Login/?strIdOperador=' + pIdOperador + '&strPasswordOperador=' + pPasswordOperador + '&strIdDispositivo=' + pIMEI)
       .map((res: Response) => {
         //alert('Respuesta original: ' + res);
@@ -120,5 +121,18 @@ export class WebApiProvider {
         return this.data;
       });
   }
-  
+
+  //guardaToken(string strIdDispositvoVc, string strTokenVc)
+  enviaNotificacionToken(idDispositivo, token): Observable<any> {
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+
+    let body = "{ strIdDispositvoVc: '" + idDispositivo + "', strTokenVc: '" + token + "' }";
+
+    return this.http.post(this.url + 'guardaToken', body, options)
+      .map((res: Response) => {
+        this.data = res.json();
+        return this.data;
+      });
+  }
 }
