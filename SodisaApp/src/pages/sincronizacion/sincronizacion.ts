@@ -187,9 +187,15 @@ export class SincronizacionPage {
 
                 }
               }
+              this.ObtieneUltimoSincronizar();
+              this.ObtieneViajesPorSincronizar();
+              this.ObtieneIncidentesPorSincronizar();
               loading.dismiss();
             }
             else {
+              this.ObtieneUltimoSincronizar();
+              this.ObtieneViajesPorSincronizar();
+              this.ObtieneIncidentesPorSincronizar();
               loading.dismiss();
 
             }

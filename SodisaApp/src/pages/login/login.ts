@@ -63,6 +63,7 @@ export class LoginPage {
           else {
             this.comunService.generaTokenPushNotificacion().then(resp => {
               if (resp != null) {
+                //alert(resp);
                 this.sodisaService.enviaNotificacionToken(Device.uuid, resp).subscribe(data => {
                   console.log('Respuesta de envio de Token: ' + data.pResponseCode);
                 });
@@ -82,6 +83,7 @@ export class LoginPage {
         else {
           this.comunService.generaTokenPushNotificacion().then(resp => {
             if (resp != null) {
+              //alert(resp);
               this.sodisaService.enviaNotificacionToken(Device.uuid, resp).subscribe(data => {
                 console.log('Respuesta de envio de Token: ' + data.pResponseCode);
               });

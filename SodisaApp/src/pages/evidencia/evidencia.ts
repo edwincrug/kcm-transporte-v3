@@ -212,7 +212,7 @@ export class EvidenciaPage {
       }).catch(error => {
         loading.dismiss();
       });
-      
+
     }
     else {
       this.sodisaService.actualizaViajeEntrega(this.userName, Device.uuid, this.lstDocumento, this.imagenSend).subscribe(data => {
@@ -232,6 +232,12 @@ export class EvidenciaPage {
         }
         else {
           this.interpretaRespuesta(data);
+
+          if (data.pResponseCode == -8) {
+            this.eliminaViajeDesasociado(this.idViaje, 0);
+            this.redirectHome();
+          }
+
         }
       }, (err) => {
         alert('Error webapi: ' + err);
@@ -287,6 +293,12 @@ export class EvidenciaPage {
         }
         else {
           this.interpretaRespuesta(data);
+
+          if (data.pResponseCode == -8) {
+            this.eliminaViajeDesasociado(this.idViaje, 0);
+            this.redirectHome();
+          }
+
         }
 
       }, (err) => {
@@ -296,6 +308,20 @@ export class EvidenciaPage {
     }
 
 
+  }
+
+  eliminaViajeDesasociado(idViaje, idViajeSync) {
+    this.dataServices.openDatabase()
+      .then(() => {
+
+        this.dataServices.eliminaViajeLocal(idViaje).then(() => {
+          // alert('Eliminado local');
+        });
+
+        this.dataServices.eliminaViajeSync(idViajeSync).then(() => {
+          //alert('Eliminado sync');
+        });
+      });
   }
 
 }

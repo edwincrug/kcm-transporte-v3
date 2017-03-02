@@ -1,8 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Http } from '@angular/http';
-import { Geolocation, Geoposition, BackgroundGeolocation } from 'ionic-native';
+import { Geolocation, Geoposition } from 'ionic-native';
 import { Push, PushToken } from '@ionic/cloud-angular';
-import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/map';
 

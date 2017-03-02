@@ -2,7 +2,7 @@ import { Component, NgZone } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { StatusBar, Splashscreen, Device } from 'ionic-native';
 import { Http } from '@angular/http';
-import { Push, PushToken } from '@ionic/cloud-angular';
+import { Push } from '@ionic/cloud-angular';
 
 import { LoginPage } from '../pages/login/login';
 
@@ -56,64 +56,8 @@ export class MyApp {
         .then(() => this.dataServices.createTableParadaIncidenteSync())
         .then(() => this.dataServices.createTableViajeDetalleSync())
         .then(() => this.dataServices.createTableUltimaActualizacion())
-        .then(() => this.dataServices.createTableParada().then(data => {
-          this.dataServices.getParadas().then(data => {
-            if (data != null) {
-              if (data.length > 0) {
-              }
-              else {
-                this.sodisaService.obtenCatalogoActualizado(1).subscribe(resp => {
-                  if (resp.length > 0) {
-                    for (let x = 0; x < resp.length; x++) {
-                      this.dataServices.insertaCatalogoParadas(resp[x].pidEventoIn, resp[x].pnombreEventoVc);
-                    }
-                  }
-                });
-
-              }
-            }
-            else {
-              this.sodisaService.obtenCatalogoActualizado(1).subscribe(resp => {
-                if (resp.length > 0) {
-                  for (let x = 0; x < resp.length; x++) {
-                    this.dataServices.insertaCatalogoParadas(resp[x].pidEventoIn, resp[x].pnombreEventoVc);
-                  }
-                }
-              });
-
-            }
-          });
-
-        }))
-        .then(() => this.dataServices.createTableIncidente().then(data => {
-          this.dataServices.getIncidentes().then(data => {
-            if (data != null) {
-              if (data.length > 0) {
-              }
-              else {
-                this.sodisaService.obtenCatalogoActualizado(2).subscribe(resp => {
-                  if (resp.length > 0) {
-                    for (let x = 0; x < resp.length; x++) {
-                      this.dataServices.insertaCatalogoIncidente(resp[x].pidEventoIn, resp[x].pnombreEventoVc);
-                    }
-                  }
-                });
-
-              }
-            }
-            else {
-              this.sodisaService.obtenCatalogoActualizado(2).subscribe(resp => {
-                if (resp.length > 0) {
-                  for (let x = 0; x < resp.length; x++) {
-                    this.dataServices.insertaCatalogoIncidente(resp[x].pidEventoIn, resp[x].pnombreEventoVc);
-                  }
-                }
-              });
-
-            }
-          });
-
-        }))
+        .then(() => this.dataServices.createTableParada())
+        .then(() => this.dataServices.createTableIncidente())
         .then(() => this.dataServices.createTableFrecuenciaGPS().then(data => {
           this.dataServices.getFrecuenciaNotificacion().then(data => {
             console.log('Tiempo de notificación: ' + data.tiempo);

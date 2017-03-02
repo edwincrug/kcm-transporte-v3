@@ -59,6 +59,9 @@ export class ModalFrecuenciaPage {
     else if (frecuencia < 15) {
       subTitle = 'La frecuencia mínima debe ser de 15 minutos';
     }
+    else if(frecuencia > 60){
+      subTitle = 'La frecuencia máxima debe ser de 60 minutos (1 hora)';
+    }
 
     return subTitle;
   }

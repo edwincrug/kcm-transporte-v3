@@ -59,12 +59,63 @@ export class LocalDataProvider {
 
   createTableParada() {
     let sql = 'CREATE TABLE IF NOT EXISTS Parada(idParada INTEGER PRIMARY KEY AUTOINCREMENT, idEvento INTEGER, descripcion TEXT, ultimaActualizacion TEXT); ';
-    return this.db.executeSql(sql, []);
+    return this.db.executeSql(sql, []).then(() => {
+      let sql = 'SELECT * FROM Parada ';
+      return this.db.executeSql(sql, [])
+        .then(response => {
+          if (response.rows.length == 0) {
+            let sqlQuery = 'INSERT INTO Parada (idEvento, descripcion, ultimaActualizacion) VALUES (1, "Carga de combustible", ""); ';
+            this.db.executeSql(sqlQuery, []);
+
+            sqlQuery = 'INSERT INTO Parada (idEvento, descripcion, ultimaActualizacion) VALUES (2, "Manifestación", ""); ';
+            this.db.executeSql(sqlQuery, []);
+
+            sqlQuery = 'INSERT INTO Parada (idEvento, descripcion, ultimaActualizacion) VALUES (3, "Mal clima", ""); ';
+            this.db.executeSql(sqlQuery, []);
+
+            sqlQuery = 'INSERT INTO Parada (idEvento, descripcion, ultimaActualizacion) VALUES (4, "Comida", ""); ';
+            this.db.executeSql(sqlQuery, []);
+
+            sqlQuery = 'INSERT INTO Parada (idEvento, descripcion, ultimaActualizacion) VALUES (5, "Descanso", ""); ';
+            this.db.executeSql(sqlQuery, []);
+
+            sqlQuery = 'INSERT INTO Parada (idEvento, descripcion, ultimaActualizacion) VALUES (6, "Otro", ""); ';
+            return this.db.executeSql(sqlQuery, []);
+          }
+
+        });
+
+    });
   }
 
   createTableIncidente() {
     let sql = 'CREATE TABLE IF NOT EXISTS Incidente(idIncidente INTEGER PRIMARY KEY AUTOINCREMENT, idEvento INTEGER, descripcion TEXT, ultimaActualizacion TEXT); ';
-    return this.db.executeSql(sql, []);
+    return this.db.executeSql(sql, []).then(() => {
+      let sql = 'SELECT * FROM Incidente ';
+      return this.db.executeSql(sql, [])
+        .then(response => {
+          if (response.rows.length == 0) {
+            let sqlQuery = 'INSERT INTO Incidente (idEvento, descripcion, ultimaActualizacion) VALUES (1, "Bloqueo de tarjeta Iave", ""); ';
+            this.db.executeSql(sqlQuery, []);
+
+            sqlQuery = 'INSERT INTO Incidente (idEvento, descripcion, ultimaActualizacion) VALUES (2, "Desvio de ruta", ""); ';
+            this.db.executeSql(sqlQuery, []);
+
+            sqlQuery = 'INSERT INTO Incidente (idEvento, descripcion, ultimaActualizacion) VALUES (3, "Falla mecánica", ""); ';
+            this.db.executeSql(sqlQuery, []);
+
+            sqlQuery = 'INSERT INTO Incidente (idEvento, descripcion, ultimaActualizacion) VALUES (4, "Intento de robo", ""); ';
+            this.db.executeSql(sqlQuery, []);
+
+            sqlQuery = 'INSERT INTO Incidente (idEvento, descripcion, ultimaActualizacion) VALUES (5, "Siniestro Unidad", ""); ';
+            this.db.executeSql(sqlQuery, []);
+
+            sqlQuery = 'INSERT INTO Incidente (idEvento, descripcion, ultimaActualizacion) VALUES (6, "Otro", ""); ';
+            return this.db.executeSql(sqlQuery, []);
+          }
+
+        });
+    });
   }
 
   createTableFrecuenciaGPS() {
