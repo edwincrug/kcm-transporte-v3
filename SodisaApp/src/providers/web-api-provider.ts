@@ -6,9 +6,10 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class WebApiProvider {
-  url: string = 'http://dev1.sodisamovil.kcm.com.mx/_WebAPI/Operador/';
+  //url: string = 'http://dev1.sodisamovil.kcm.com.mx/_WebAPI/Operador/';
   //url: string = 'http://www.sodisamovil.kcm.com.mx/_WebAPI/Operador/';
-  //url: string = 'http://qa1.sodisamovil.kcm.com.mx/_WebAPI/Operador/';
+  //url: string = 'http://www1.sodisamovil.kcm.com.mx/_WebAPI/Operador/';
+  url: string = 'http://qa1.sodisamovil.kcm.com.mx/_WebAPI/Operador/';
   data: any;
   parametros: any;
 

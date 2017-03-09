@@ -121,7 +121,7 @@ export class LocalDataProvider {
   createTableFrecuenciaGPS() {
     let sql = 'CREATE TABLE IF NOT EXISTS FrecuenciaGPS(idFrecuencia INTEGER PRIMARY KEY AUTOINCREMENT, tiempo INTEGER); ';
     return this.db.executeSql(sql, []).then(() => {
-      let sqlQuery = 'INSERT INTO FrecuenciaGPS (tiempo) VALUES (30000)';
+      let sqlQuery = 'INSERT INTO FrecuenciaGPS (tiempo) VALUES (900000)';
       return this.db.executeSql(sqlQuery, []);
     });
   }

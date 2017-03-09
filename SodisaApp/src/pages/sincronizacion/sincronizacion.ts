@@ -7,6 +7,7 @@ import { WebApiProvider } from '../../providers/web-api-provider';
 import { LocalDataProvider } from '../../providers/local-data-provider';
 
 import { NetworkProvider } from '../../providers/network-provider';
+import { ComunProvider } from '../../providers/comun-provider';
 
 
 /*
@@ -30,7 +31,7 @@ export class SincronizacionPage {
 
   constructor(public navCtrl: NavController, public params: NavParams, private loadingCtrl: LoadingController,
     public dataServices: LocalDataProvider, public sodisaService: WebApiProvider, public http: Http,
-    public networkService: NetworkProvider, public alertCtrl: AlertController) {
+    public networkService: NetworkProvider, public alertCtrl: AlertController, public comunService: ComunProvider) {
 
     this.username = params.get('usuario');
     this.nombre = params.get('nombre');
@@ -102,8 +103,8 @@ export class SincronizacionPage {
                         // alert('Local no eliminado');
                       });
                     }
-                    else {
-
+                    else if (resp.pResponseCode == -8) {
+                      this.comunService.eliminaViajeDesasociado(result[x].idViaje, result[x].idViajeSync);
                     }
                   });
                 }
@@ -150,8 +151,8 @@ export class SincronizacionPage {
                               // alert('Local no eliminado');
                             });
                           }
-                          else {
-
+                          else if (data.pResponseCode == -8) {
+                            this.comunService.eliminaViajeDesasociado(result[x].idViaje, result[x].idViajeSync);
                           }
                         }, (err) => {
                           // alert('Error webapi: ' + err);
@@ -179,8 +180,8 @@ export class SincronizacionPage {
                           // alert('Local no eliminado');
                         });
                       }
-                      else {
-                        // alert('No lo afecto pero hay comunicactión');
+                      else if (resp.pResponseCode == -8) {
+                        this.comunService.eliminaViajeDesasociado(result[x].idViaje, result[x].idViajeSync);
                       }
                     });
                   }

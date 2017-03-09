@@ -5,6 +5,8 @@ import { Push, PushToken } from '@ionic/cloud-angular';
 
 import 'rxjs/add/operator/map';
 
+import { LocalDataProvider } from '../providers/local-data-provider';
+
 /*
   Generated class for the ComunProvider provider.
 
@@ -18,7 +20,9 @@ export class ComunProvider {
   public coordenadas: string;
   public watch: any;
 
-  constructor(public http: Http, public zone: NgZone, public push: Push) {
+  constructor(public http: Http, public zone: NgZone, public push: Push,
+    public dataServices: LocalDataProvider) {
+      
     console.log('Hello ComunProvider Provider');
   }
 
@@ -107,6 +111,20 @@ export class ComunProvider {
       console.log('Error al generar Token: ' + error);
     });
 
+  }
+
+  eliminaViajeDesasociado(idViaje, idViajeSync) {
+    this.dataServices.openDatabase()
+      .then(() => {
+
+        this.dataServices.eliminaViajeLocal(idViaje).then(() => {
+          // alert('Eliminado local');
+        });
+
+        this.dataServices.eliminaViajeSync(idViajeSync).then(() => {
+          //alert('Eliminado sync');
+        });
+      });
   }
 
 }

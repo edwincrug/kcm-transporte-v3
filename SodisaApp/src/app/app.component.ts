@@ -40,7 +40,7 @@ export class MyApp {
       let wsSodisa = new WebApiProvider(this.http);
       let lstDocumento = [];
       let networkState = new NetworkProvider(this.http, this.platform);
-      let objComun = new ComunProvider(this.http, this.zone, this.push);
+      let objComun = new ComunProvider(this.http, this.zone, this.push, this.dataServices);
 
       console.log('Tiempo inicial: ' + tiempo);
 
@@ -143,8 +143,8 @@ export class MyApp {
                             // alert('Local no eliminado');
                           });
                         }
-                        else {
-
+                        else if (resp.pResponseCode == -8) {
+                          objComun.eliminaViajeDesasociado(result[x].idViaje, result[x].idViajeSync);
                         }
                       });
                     }
@@ -194,8 +194,8 @@ export class MyApp {
                                   // alert('Local no eliminado');
                                 });
                               }
-                              else {
-
+                              else if (data.pResponseCode == -8) {
+                                objComun.eliminaViajeDesasociado(result[x].idViaje, result[x].idViajeSync);
                               }
                             }, (err) => {
                               // alert('Error webapi: ' + err);
@@ -233,8 +233,8 @@ export class MyApp {
                               // alert('Local no eliminado');
                             });
                           }
-                          else {
-                            // alert('No lo afecto pero hay comunicactión');
+                          else if (resp.pResponseCode == -8) {
+                            objComun.eliminaViajeDesasociado(result[x].idViaje, result[x].idViajeSync);
                           }
                         });
                       }
